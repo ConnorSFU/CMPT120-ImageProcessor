@@ -10,82 +10,82 @@ import numpy
 ###                 ###
 ### Basic functions ###
 ###                 ###
-def invert(pixels) :
-  width = len(pixels)
-  height = len(pixels[0])
+def invert(img) :
+  width = len(img)
+  height = len(img[0])
 
   # invert each pixel by subtracting 255 from the color value and taking the
   # absolute value of it
   for i in range(width) :
     for j in range(height) :
       for k in range(3) :
-        pixels[i][j][k] = abs(pixels[i][j][k] - 255)
-  return pixels
+        img[i][j][k] = abs(img[i][j][k] - 255)
+  return img
 
-def flipHorizontal(pixels) :
-  width = len(pixels)
-  height = len(pixels[0])
+def flipHorizontal(img) :
+  width = len(img)
+  height = len(img[0])
   halfWidth = int(width / 2)
 
   # For each column from left edge to the center of the image, swap each pixel
   # with the one on the opposite side horizontally (-i)
   for i in range(halfWidth) :
     for j in range(height) :
-      temp = pixels[i][j]
-      pixels[i][j] = pixels[-i][j]
-      pixels[-i][j] = temp
-  return pixels
+      temp = img[i][j]
+      img[i][j] = img[-i][j]
+      img[-i][j] = temp
+  return img
 
-def flipVertical(pixels) :
-  width = len(pixels)
-  height = len(pixels[0])
+def flipVertical(img) :
+  width = len(img)
+  height = len(img[0])
   halfHeight = int(height / 2)
 
   # For each column from left edge to the center of the image, swap each pixel
-  # with the one on the opposite side vertically (-i)
+  # with the one on the opposite side vertically (-j)
   for i in range(width) :
     for j in range(halfHeight) :
-      temp = pixels[i][j]
-      pixels[i][j] = pixels[i][-j]
-      pixels[i][-j] = temp
-  return pixels
+      temp = img[i][j]
+      img[i][j] = img[i][-j]
+      img[i][-j] = temp
+  return img
 
 
 ###                        ###
 ### Intermediate functions ###
 ###                        ###
-def removeRedChannel(pixels) :
-    return pixels
+def removeRedChannel(img) :
+    return img
 
-def removeGreenChannel(pixels) :
-    return pixels
+def removeGreenChannel(img) :
+    return img
 
-def removeBlueChannel(pixels) :
-    return pixels
+def removeBlueChannel(img) :
+    return img
 
-def convertToGreyscale(pixels) :
-    return pixels
+def convertToGreyscale(img) :
+    return img
 
-def applySepiaFilter(pixels) :
-    return pixels
+def applySepiaFilter(img) :
+    return img
 
-def decreaseBrightness(pixels) :
-    return pixels
+def decreaseBrightness(img) :
+    return img
 
-def increaseBrightness(pixels) :
-    return pixels
+def increaseBrightness(img) :
+    return img
 
 ###                    ###
 ### Advanced functions ###
 ###                    ###
-def rotateLeft(pixels) :
-    return pixels
+def rotateLeft(img) :
+    return img
 
-def rotateRight(pixels) :
-    return pixels
+def rotateRight(img) :
+    return img
 
-def pixelate(pixels) :
-    return pixels
+def pixelate(img) :
+    return img
 
-def binarize(pixels) :
-    return pixels
+def binarize(img) :
+    return img
