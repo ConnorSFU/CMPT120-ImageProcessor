@@ -7,6 +7,9 @@
 import cmpt120imageProj
 import numpy
 
+###                 ###
+### Basic functions ###
+###                 ###
 def invert(pixels) :
   width = len(pixels)
   height = len(pixels[0])
@@ -46,3 +49,43 @@ def flipVertical(pixels) :
       pixels[i][j] = pixels[i][-j]
       pixels[i][-j] = temp
   return pixels
+
+
+###                        ###
+### Intermediate functions ###
+###                        ###
+def removeRedChannel(pixels) :
+    return pixels
+
+def removeGreenChannel(pixels) :
+    return pixels
+
+def removeBlueChannel(pixels) :
+    return pixels
+
+def convertToGreyscale(pixels) :
+    return pixels
+
+def applySepiaFilter(pixels) :
+    return pixels
+
+def decreaseBrightness(pixels) :
+    return pixels
+
+def increaseBrightness(pixels) :
+    return pixels
+
+###                    ###
+### Advanced functions ###
+###                    ###
+def rotateLeft(pixels) :
+    return pixels
+
+def rotateRight(pixels) :
+    return pixels
+
+def pixelate(pixels) :
+    return pixels
+
+def binarize(pixels) :
+    return pixels
