@@ -2,8 +2,7 @@
 # Starter code for main.py
 # Author(s):
 # Date:
-# Description lorem ipsum dolor sit amet
-# Description but connor's is speled rong
+# Description: 
 
 import cmpt120imageProj
 import cmpt120imageManip

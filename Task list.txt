@@ -1,27 +1,30 @@
 TO DO:
 Menu functionality
-  Open image
-  Save image
-  Reload image
+  Open image   #oliver
+  Save image   #oliver
+  Reload image #oliver
   
 [Basic mode]
-  Invert
-  Flip horizontal
-  Flip vertical
+  Flip vertical (written but untested)
 
 [Intermediate]
-  Remove red
-  Remove green
-  Remove blue
-  Convert to greyscale
-  Apply sepia filter
-  Decrease brightness
-  Increase brightnss
+  Remove red   #connor
+  Remove green #connor
+  Remove blue  #connor
+  Convert to greyscale #connor
+  Apply sepia filter   #connor
+  
+  Decrease brightness  #oliver
+  Increase brightnss   #oliver
 
 [Advanced]
-    Rotate left
-    Rotate right
-    Pixelate
-    Binarize
+    Rotate left  #connor
+    Pixelate     #connor
+    
+    Rotate right #oliver
+    Binarize     #oliver
 
 COMPLETE:
+[Basic mode]
+  Invert (sort of) - needs to be able to be called by user
+  Flip horizontal (sort of)
