@@ -17,9 +17,9 @@ def invert(img) :
     # invert each pixel by subtracting 255 from the color value and taking the
     # absolute value of it
     for i in range(width) :
-      for j in range(height) :
-        for k in range(3) :
-          img[i][j][k] = abs(img[i][j][k] - 255)
+        for j in range(height) :
+            for k in range(3) :
+                img[i][j][k] = abs(img[i][j][k] - 255)
     return img
 
 def flipHorizontal(img) :
@@ -37,18 +37,18 @@ def flipHorizontal(img) :
     return img
 
 def flipVertical(img) :
-  width = len(img)
-  height = len(img[0])
-  halfHeight = int(height / 2)
+    width = len(img)
+    height = len(img[0])
+    halfHeight = int(height / 2)
 
-  # For each row from left edge to the center of the image, swap each pixel
-  # with the one on the opposite side vertically (-j)
-  for i in range(width) :
-    for j in range(halfHeight) :
-      temp = img[i][j]
-      img[i][j] = img[i][-j]
-      img[i][-j] = temp
-  return img
+    # For each row from left edge to the center of the image, swap each pixel
+    # with the one on the opposite side vertically (-j)
+    for i in range(width) :
+        for j in range(halfHeight) :
+            temp = img[i][j]
+            img[i][j] = img[i][-j]
+            img[i][-j] = temp
+    return img
 
 
 ###                        ###
@@ -60,8 +60,8 @@ def removeRedChannel(img) :
     
     # sets red value to 0 for all pixels in the image
     for i in range(width) :
-      for j in range(height) :
-          img[i][j][0] = 0
+        for j in range(height) :
+            img[i][j][0] = 0
     return img
 
 def removeGreenChannel(img) :
@@ -70,8 +70,8 @@ def removeGreenChannel(img) :
     
     # sets green value to 0 for all pixels in the image
     for i in range(width) :
-      for j in range(height) :
-          img[i][j][1] = 0
+        for j in range(height) :
+            img[i][j][1] = 0
     return img
 
 def removeBlueChannel(img) :
@@ -80,8 +80,8 @@ def removeBlueChannel(img) :
     
     # sets blue value to 0 for all pixels in the image
     for i in range(width) :
-      for j in range(height) :
-          img[i][j][2] = 0
+        for j in range(height) :
+            img[i][j][2] = 0
     return img
 
 def convertToGreyscale(img) :
@@ -94,12 +94,13 @@ def convertToGreyscale(img) :
             # sum the total of all colour values, then average them
             for k in range(3) :
                 totalColourVal += img[i][j][k]
-            average = totalColoural / 3
+            average = totalColourVal / 3
             
+            # set each colour value to the average
             for k in range(3) :
                 img[i][j][k] = average
     return img
-
+  
 def applySepiaFilter(img) :
     img = convertToGreyscale(img)
     width = len(img)
@@ -157,13 +158,40 @@ def rotateLeft(img) :
     for i in range(1, width) :
         for j in range(1, height) :
             for k in range(3) :
-              newImg[j][-i][k] = img[i][j][k]
+                newImg[j][-i][k] = img[i][j][k]
     return newImg
 
-def rotateRight(img) :
+def pixelate(img) :
+    width = len(img)
+    height = len(img[0])
+    # Ignores edge pixels if image dimensions not divisible by 4
+    width -= width % 4
+    height -= height % 4
+    
+    # For every 4x4 block of pixels
+    for i in range(0, width, 4) :
+        for j in range(0, height, 4) :
+            # Get the total RGB values of the block
+            redTotal = 0
+            greenTotal = 0
+            blueTotal = 0
+            for x in range(i, i + 4) :
+                for y in range(j, j + 4) :
+                    redTotal += img[x][y][0]
+                    greenTotal += img[x][y][1]
+                    blueTotal += img[x][y][2]
+            # Average the RGB totals and replace pixels with the averages
+            redAverage = redTotal / 16
+            greenAverage = greenTotal / 16
+            blueAverage = blueTotal / 16
+            for x in range(i, i + 4) :
+                for y in range(j, j + 4) :
+                    img[x][y][0] = redAverage
+                    img[x][y][1] = greenAverage
+                    img[x][y][2] = blueAverage
     return img
 
-def pixelate(img) :
+def rotateRight(img) :
     return img
 
 def binarize(img) :
