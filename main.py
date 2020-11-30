@@ -2,7 +2,7 @@
 # Starter code for main.py
 # Author(s):
 # Date:
-# Description but different
+# Description but connor's is speled rong
 
 import cmpt120imageProj
 import cmpt120imageManip
