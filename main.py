@@ -2,7 +2,7 @@
 # Starter code for main.py
 # Author(s):
 # Date:
-# Description: lkjlkjlkj;lllk
+# Description but different
 
 import cmpt120imageProj
 import cmpt120imageManip

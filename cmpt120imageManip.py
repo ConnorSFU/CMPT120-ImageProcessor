@@ -41,7 +41,7 @@ def flipVertical(img) :
   height = len(img[0])
   halfHeight = int(height / 2)
 
-  # For each column from left edge to the center of the image, swap each pixel
+  # For each row from left edge to the center of the image, swap each pixel
   # with the one on the opposite side vertically (-j)
   for i in range(width) :
     for j in range(halfHeight) :

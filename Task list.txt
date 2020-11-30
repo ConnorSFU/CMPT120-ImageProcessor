@@ -1,6 +1,9 @@
 TO DO:
 Menu functionality
-
+  Open image
+  Save image
+  Reload image
+  
 [Basic mode]
   Invert
   Flip horizontal
