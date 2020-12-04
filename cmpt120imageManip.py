@@ -124,10 +124,30 @@ def applySepiaFilter(img) :
             img[i][j][2] = sepiaBlue
     return img
 
-def decreaseBrightness(img) :
+def decreaseBrightness(img):
+    w = len(img)
+    h = len(img[0])
+    for x in range(w):
+        for y in range(h):
+        px = img[x][y]
+        for z in range(3):
+            if px[z] >= 10:
+            px[z] = px[z] - 10
+            else:
+            px[z] = 0
     return img
 
-def increaseBrightness(img) :
+def increaseBrightness(img):
+    w = len(img)
+    h = len(img[0])
+    for x in range(w):
+        for y in range(h):
+        px = img[x][y]
+        for z in range(3):
+            if px[z] <= 245:
+            px[z] = px[z] + 10
+            else:
+            px[z] = 255
     return img
 
 ###                    ###
