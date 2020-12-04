@@ -212,7 +212,97 @@ def pixelate(img) :
     return img
 
 def rotateRight(img) :
-    return img
+    w = len(img)
+    h = len(img[0])
+    # same as rotate left, except -j instead of -i
+    newImg = []
+    for i in range(h):
+        newImg.append([])
+        for j in range(w) :
+            newImg[i].append([])
+            for k in range(3) :
+                newImg[i][j].append(0)
+
+    print(len(newImg), len(newImg[0]))
+    
+    for i in range(h) :
+        for k in range(3) :
+        newImg[i][w - 1][k] = img[i][0][k]
+
+    for i in range(1, w) :
+            for j in range(1, h) :
+                for k in range(3) :
+                    newImg[-j][i][k] = img[i][j][k]
+    return newImg
 
 def binarize(img) :
-    return img
+    w = len(img)
+    h = len(img[0])
+    g = convertToGreyscale(img)
+    total = 0
+    px = 0
+    for x in range(w):
+        for y in range(h):
+        total += g[x][y][0]
+        px += 1
+    print(total, px)
+    threshold = total/px
+    print(threshold)
+
+    bg = []
+    for x in range(w):
+        bg.append([])
+        for y in range(h) :
+            bg[x].append([])
+            for k in range(3) :
+                bg[x][y].append(0)
+    fg = []
+    for x in range(w):
+        fg.append([])
+        for y in range(h) :
+            fg[x].append([])
+            for k in range(3) :
+                fg[x][y].append(0)   
+                    
+    for x in range(w) :
+        for y in range(h) :
+        px = img[x][y]
+        for z in range(3):   
+            if(px[z] <= threshold):
+            bg[x][y][k] = img[x][y][z]
+    for x in range(w) :
+        for y in range(h) :
+        px = img[x][y]
+        for z in range(3):   
+            if(px[z] >= threshold):
+            fg[x][y][k] = img[x][y][z]
+
+    px1 = 0
+    total1 = 0
+    for x in range(w):
+        for y in range(h):
+        total1 += bg[x][y][0]
+        px1 += 1
+    bgavg = total1/px1
+    
+    px2 = 0
+    total2 = 0
+    for x in range(w):
+        for y in range(h):
+        total2 += fg[x][y][0]
+        px2 += 1
+    fgavg = total2/px2
+
+    avg = (bgavg + fgavg)/2
+    print(avg)
+
+    for x in range(w):
+        for y in range(h):
+        px = g[x][y]
+        for z in range(3):
+            if (px[z] <= threshold):
+            px[z] = 0
+            else:
+            px[z] = 255
+
+    return g
