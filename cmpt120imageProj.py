@@ -1,6 +1,5 @@
-# CMPT 120 Yet Another Image Processer
-# Starter code for cmpt120imageProj.py
-# ***do not modify this file***
+# Pygame image functions for the Yet Another Image Processor project
+# Do not modfiy this file
 
 import pygame
 import numpy
@@ -26,22 +25,6 @@ def saveImage(pixels, filename):
   pygame.surfarray.blit_array(surf, nparray)
   pygame.image.save(surf, filename)
 
-def showImage(pixels, title):
-    """
-    Input:  pixels - 2d array of RGB values
-            title - title of the window
-    Output: show the image in a window
-    """
-    nparray = numpy.asarray(pixels)
-    surf = pygame.surfarray.make_surface(nparray)
-    (width, height, colours) = nparray.shape
-    pygame.display.init()
-    pygame.display.set_caption(title)
-    screen = pygame.display.set_mode((width, height))
-    screen.fill((225, 225, 225))
-    screen.blit(surf, (0, 0))
-    pygame.display.update()
-
 def showInterface(pixels, title, textList):
     """
     Input:  pixels - 2d array of RGB values
@@ -53,7 +36,6 @@ def showInterface(pixels, title, textList):
     surf = pygame.surfarray.make_surface(nparray)
     (width, height, colours) = nparray.shape
     # set up the text to be displayed
-    pygame.font.init()
     fontObj = pygame.font.Font("freesansbold.ttf", 16)
     textObjs = []
     for line in textList:
@@ -66,17 +48,16 @@ def showInterface(pixels, title, textList):
     # find out the width of the screen
     width = max(width, maxLineWidth)
     # set up the display
-    pygame.display.init()
     pygame.display.set_caption(title + " (" + str(width) + "x" + str(height) + ")")
     screen = pygame.display.set_mode((width, height + textObjs[0].get_height()*len(textObjs)))
     screen.fill((225, 225, 225))
     # add the image to the display
     screen.blit(surf, (0, 0))
     # add the texts to the display
-    i = 0
+    textHeight = height
     for textObj in textObjs:
-        screen.blit(textObj, (0, height + i * textObj.get_height()))
-        i += 1
+        screen.blit(textObj, (0, textHeight))
+        textHeight += textObj.get_height()
     # display everything
     pygame.display.update()
 
