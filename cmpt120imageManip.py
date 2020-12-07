@@ -245,9 +245,11 @@ def pixelate(img) :
     return img
 
 def binarize(img) :
+    g = convertToGreyscale(img) #convert to grayscale
+
+    #calculate initial threshold from average of one of the pixel channels
     w = len(img)
     h = len(img[0])
-    g = convertToGreyscale(img)
     total = 0
     px = 0
     for x in range(w):
@@ -256,6 +258,7 @@ def binarize(img) :
             px += 1
     threshold = total/px
 
+    #create background, only pixels lower than or equal to the threshold will be copied over
     bg = []
     for x in range(w):
         bg.append([])
@@ -263,6 +266,14 @@ def binarize(img) :
             bg[x].append([])
             for k in range(3) :
                 bg[x][y].append(0)
+    for x in range(w) :
+        for y in range(h) :
+            px = img[x][y]
+            for z in range(3):   
+                if(px[z] <= threshold):
+                    bg[x][y][z] = img[x][y][z]
+
+    #create foreground, only pixels higher than the threshold will be copied over
     fg = []
     for x in range(w):
         fg.append([])
@@ -270,20 +281,14 @@ def binarize(img) :
             fg[x].append([])
             for k in range(3) :
                 fg[x][y].append(0)   
-                    
     for x in range(w) :
         for y in range(h) :
             px = img[x][y]
             for z in range(3):   
-                if(px[z] <= threshold):
-                    bg[x][y][k] = img[x][y][z]
-    for x in range(w) :
-        for y in range(h) :
-            px = img[x][y]
-            for z in range(3):   
-                if(px[z] >= threshold):
-                    fg[x][y][k] = img[x][y][z]
+                if(px[z] > threshold):
+                    fg[x][y][z] = img[x][y][z]
 
+    #calculate average for one of pixel values for background
     px1 = 0
     total1 = 0
     for x in range(w):
@@ -292,6 +297,7 @@ def binarize(img) :
             px1 += 1
     bgavg = total1/px1
     
+    #calculate average for one of pixel values for foreground
     px2 = 0
     total2 = 0
     for x in range(w):
@@ -300,15 +306,19 @@ def binarize(img) :
             px2 += 1
     fgavg = total2/px2
 
-    avg = (bgavg + fgavg)/2
+    #new threshold from average of both averages
+    newthreshold = (bgavg + fgavg)/2
 
-    for x in range(w):
-        for y in range(h):
+    #if difference between two thresholds is less than or equal to 10, stop the algorithm. otherwise, use the new threshold
+    if abs(threshold - newthreshold) <= 10:
+        threshold = newthreshold
+    else:
+        for x in range(w):
+            for y in range(h):
             px = g[x][y]
             for z in range(3):
-                if (px[z] <= threshold):
+                if (px[z] <= newthreshold):
                     px[z] = 0
                 else:
                     px[z] = 255
-
     return g
