@@ -81,7 +81,6 @@ def generateMenu(state):
         menuString.append("Enter your choice (Q/O/S/R or 1-6)")
     else:
         menuString.append("Error: Unknown mode!")
-
     return menuString
 
 # a helper function that returns the result image as a result of the operation chosen by the user
@@ -96,94 +95,84 @@ def handleUserInput(state, img):
     # handle the system functionalities
     if userInput.isalpha(): # check if the input is an alphabet
         print("Log: Doing system functionalities " + userInput)
-        if userInput == "Q": # this case actually won't happen, it's here as an example
-            print("Log: Quitting...")
-        elif userInput == "O":
+        if userInput == "O":
           tkinter.Tk().withdraw()
           openFilename = tkinter.filedialog.askopenfilename()
-          img = cmpt120imageProj.getImage(openFilename)
-          cmpt120imageProj.showInterface(img, "Image", generateMenu(appStateValues))
-          appStateValues["lastOpenFilename"] = openFilename
+          if openFilename!= "":
+              img = cmpt120imageProj.getImage(openFilename)
+              cmpt120imageProj.showInterface(img, openFilename, generateMenu(appStateValues))
+              appStateValues["lastOpenFilename"] = openFilename
+          else:
+              print("Error: no file opened")
         elif userInput == "S":
           tkinter.Tk().withdraw()
           saveFilename = tkinter.filedialog.asksaveasfilename()
-          cmpt120imageProj.saveImage(img, saveFilename)
-          appStateValues["lastSaveFilename"] = saveFilename
-        elif userInput == "R": # to be fixed
-          cmpt120imageProj.showInterface(img, "Image", generateMenu(appStateValues))
-        # ***add the rest to handle other system functionalities***
+          if saveFilename != "":
+              cmpt120imageProj.saveImage(img, saveFilename)
+              appStateValues["lastSaveFilename"] = saveFilename
+          else:
+              print("Error: no file saved")
+        elif userInput == "R":
+          openFilename = appStateValues["lastOpenFilename"]
+          if openFilename != "" :
+              img = cmpt120imageProj.getImage(openFilename)
+              cmpt120imageProj.showInterface(img, openFilename, generateMenu(appStateValues))
+          else:
+              print("Error: no file to reload")
 
     # or handle the manipulation functionalities based on which mode the application is in
     elif userInput.isdigit(): # has to be a digit for manipulation options
         print("Log: Doing manipulation functionalities " + userInput)
+        # Basic mode
         if appStateValues["mode"] == "basic":
           if int(userInput) == 1:
             appStateValues["mode"] = "intermediate"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 2:
             appStateValues["mode"] = "advanced"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 3:
             cmpt120imageManip.invert(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 4:
             cmpt120imageManip.flipHorizontal(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 5:
             cmpt120imageManip.flipVertical(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
+        # Intermediate mode
         elif appStateValues["mode"] == "intermediate":
           if int(userInput) == 1:
             appStateValues["mode"] = "basic"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 2:
             appStateValues["mode"] = "advanced"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 3:
             cmpt120imageManip.removeRedChannel(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 4:
             cmpt120imageManip.removeGreenChannel(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 5:
             cmpt120imageManip.removeBlueChannel(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 6:
             cmpt120imageManip.convertToGreyscale(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 7:
             cmpt120imageManip.applySepiaFilter(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 8:
             cmpt120imageManip.decreaseBrightness(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 9:
             cmpt120imageManip.increaseBrightness(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
+        # Advanced mode
         elif appStateValues["mode"] == "advanced":
           if int(userInput) == 1:
             appStateValues["mode"] = "basic"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 2:
             appStateValues["mode"] = "intermediate"
-            cmpt120imageProj.showInterface(currentImg, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 3:
-            cmpt120imageManip.rotateLeft(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
+            img = cmpt120imageManip.rotateLeft(img)
           elif int(userInput) == 4:
-            cmpt120imageManip.rotateRight(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
+            img = cmpt120imageManip.rotateRight(img)
           elif int(userInput) == 5:
             cmpt120imageManip.pixelate(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
           elif int(userInput) == 6:
             cmpt120imageManip.binarize(img)
-            cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
-        # ***add the rest to handle other manipulation functionalities***
 
     else: # unrecognized user input
-            print("Log: Unrecognized user input: " + userInput)
-
+        print("Log: Unrecognized user input: " + userInput)
+    cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
     return img
 
 # use a dictionary to remember several state values of the application

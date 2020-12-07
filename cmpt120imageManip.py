@@ -105,7 +105,7 @@ def applySepiaFilter(img) :
     img = convertToGreyscale(img)
     width = len(img)
     height = len(img[0])
-
+    # apply formula to turn image sepia
     for i in range(width) :
         for j in range(height) :
             sepiaRed = int((img[i][j][0] * .393) + (img[i][j][1] * .769)
@@ -114,7 +114,7 @@ def applySepiaFilter(img) :
                              + (img[i][j][2] * .168))
             sepiaBlue = int((img[i][j][0] * .272) + (img[i][j][1] * .534)
                             + (img[i][j][2] * .131))
-            
+            # set any values above max possible RGB value to 255
             if sepiaRed > 255 : sepiaRed = 255
             if sepiaGreen > 255 : sepiaGreen = 255
             if sepiaBlue > 255 : sepiaBlue = 255
@@ -129,12 +129,12 @@ def decreaseBrightness(img):
     h = len(img[0])
     for x in range(w):
         for y in range(h):
-        px = img[x][y]
-        for z in range(3):
-            if px[z] >= 10:
-            px[z] = px[z] - 10
-            else:
-            px[z] = 0
+            px = img[x][y]
+            for z in range(3):
+                if px[z] >= 10:
+                    px[z] = px[z] - 10
+                else:
+                    px[z] = 0
     return img
 
 def increaseBrightness(img):
@@ -142,13 +142,14 @@ def increaseBrightness(img):
     h = len(img[0])
     for x in range(w):
         for y in range(h):
-        px = img[x][y]
-        for z in range(3):
-            if px[z] <= 245:
-            px[z] = px[z] + 10
-            else:
-            px[z] = 255
+            px = img[x][y]
+            for z in range(3):
+                if px[z] <= 245:
+                    px[z] = px[z] + 10
+                else:
+                    px[z] = 255
     return img
+
 
 ###                    ###
 ### Advanced functions ###
@@ -165,21 +166,53 @@ def rotateLeft(img) :
             newImg[i].append([])
             for k in range(3) :
               newImg[i][j].append(0)
-
+              
     # copy the first row of pixels, because of using -i in the next loop, the
     # first row does not copy
-    print(len(newImg[0]))
-    print(width)
-    for i in range(height) :
-        for k in range(3) :
-            newImg[i][width - 1][k] = img[i][0][k]
+    if height > width :
+        for i in range(width) :
+            for k in range(3) :
+                newImg[i][width - 1][k] = img[i][0][k]
+    else :
+        for i in range(height) :
+            for k in range(3) :
+                newImg[i][width - 1][k] = img[i][0][k]
 
     # copy the old pixels into the new image from the second row onwards      
-    for i in range(1, width) :
-        for j in range(1, height) :
+    for i in range(width) :
+        for j in range(height) :
             for k in range(3) :
                 newImg[j][-i][k] = img[i][j][k]
-    return newImg
+    img = newImg
+    return img
+
+def rotateRight(img) :
+    w = len(img)
+    h = len(img[0])
+    # same as rotate left, except -j instead of -i
+    newImg = []
+    for i in range(h):
+        newImg.append([])
+        for j in range(w) :
+            newImg[i].append([])
+            for k in range(3) :
+                newImg[i][j].append(0)
+    
+    if h > w :
+        for i in range(w) :
+            for k in range(3) :
+                newImg[i][w - 1][k] = img[i][0][k]
+    else :
+        for i in range(h) :
+            for k in range(3) :
+                newImg[i][w - 1][k] = img[i][0][k]
+
+    for i in range(w) :
+            for j in range(h) :
+                for k in range(3) :
+                    newImg[-j][i][k] = img[i][j][k]
+    img = newImg
+    return img
 
 def pixelate(img) :
     width = len(img)
@@ -211,30 +244,6 @@ def pixelate(img) :
                     img[x][y][2] = blueAverage
     return img
 
-def rotateRight(img) :
-    w = len(img)
-    h = len(img[0])
-    # same as rotate left, except -j instead of -i
-    newImg = []
-    for i in range(h):
-        newImg.append([])
-        for j in range(w) :
-            newImg[i].append([])
-            for k in range(3) :
-                newImg[i][j].append(0)
-
-    print(len(newImg), len(newImg[0]))
-    
-    for i in range(h) :
-        for k in range(3) :
-        newImg[i][w - 1][k] = img[i][0][k]
-
-    for i in range(1, w) :
-            for j in range(1, h) :
-                for k in range(3) :
-                    newImg[-j][i][k] = img[i][j][k]
-    return newImg
-
 def binarize(img) :
     w = len(img)
     h = len(img[0])
@@ -243,11 +252,9 @@ def binarize(img) :
     px = 0
     for x in range(w):
         for y in range(h):
-        total += g[x][y][0]
-        px += 1
-    print(total, px)
+            total += g[x][y][0]
+            px += 1
     threshold = total/px
-    print(threshold)
 
     bg = []
     for x in range(w):
@@ -266,43 +273,42 @@ def binarize(img) :
                     
     for x in range(w) :
         for y in range(h) :
-        px = img[x][y]
-        for z in range(3):   
-            if(px[z] <= threshold):
-            bg[x][y][k] = img[x][y][z]
+            px = img[x][y]
+            for z in range(3):   
+                if(px[z] <= threshold):
+                    bg[x][y][k] = img[x][y][z]
     for x in range(w) :
         for y in range(h) :
-        px = img[x][y]
-        for z in range(3):   
-            if(px[z] >= threshold):
-            fg[x][y][k] = img[x][y][z]
+            px = img[x][y]
+            for z in range(3):   
+                if(px[z] >= threshold):
+                    fg[x][y][k] = img[x][y][z]
 
     px1 = 0
     total1 = 0
     for x in range(w):
         for y in range(h):
-        total1 += bg[x][y][0]
-        px1 += 1
+            total1 += bg[x][y][0]
+            px1 += 1
     bgavg = total1/px1
     
     px2 = 0
     total2 = 0
     for x in range(w):
         for y in range(h):
-        total2 += fg[x][y][0]
-        px2 += 1
+            total2 += fg[x][y][0]
+            px2 += 1
     fgavg = total2/px2
 
     avg = (bgavg + fgavg)/2
-    print(avg)
 
     for x in range(w):
         for y in range(h):
-        px = g[x][y]
-        for z in range(3):
-            if (px[z] <= threshold):
-            px[z] = 0
-            else:
-            px[z] = 255
+            px = g[x][y]
+            for z in range(3):
+                if (px[z] <= threshold):
+                    px[z] = 0
+                else:
+                    px[z] = 255
 
     return g
