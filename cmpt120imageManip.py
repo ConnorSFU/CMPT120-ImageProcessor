@@ -1,8 +1,10 @@
 # CMPT 120 Yet Another Image Processer
 # Starter code for cmpt120imageManip.py
-# Author(s):
-# Date:
-# Description:
+# Author(s): Connor Goudie, Oliver Lin
+# Date: Dec 7, 2020
+# Description: Library of functions that manipulate image, which is input as a 2D aray of RGB values
+# functions include invertion of the colours, flipping the image, removing colour channels, adding
+# greyscale and sepia filters, adjusting brightness, rotating the image, pixelating, and binarizing
 
 import cmpt120imageProj
 import numpy
@@ -155,10 +157,10 @@ def increaseBrightness(img):
 ### Advanced functions ###
 ###                    ###
 def rotateLeft(img) :
-    width = len(img)
+    shorterDimension = width = len(img)
     height = len(img[0])
 
-    # create a new empty array
+    # create a new empty array to copy the input img into
     newImg = []
     for i in range(height) :
         newImg.append([])
@@ -167,27 +169,25 @@ def rotateLeft(img) :
             for k in range(3) :
               newImg[i][j].append(0)
               
+    # for the first row loop, continue until the shorter dimension max is reached
+    if width > height: shorterDimension = height
     # copy the first row of pixels, because of using -i in the next loop, the
     # first row does not copy
-    if height > width :
-        for i in range(width) :
-            for k in range(3) :
-                newImg[i][width - 1][k] = img[i][0][k]
-    else :
-        for i in range(height) :
-            for k in range(3) :
-                newImg[i][width - 1][k] = img[i][0][k]
+    for i in range(shorterDimension) :
+        for k in range(3) :
+            newImg[i][width - 1][k] = img[i][0][k]
 
     # copy the old pixels into the new image from the second row onwards      
-    for i in range(width) :
-        for j in range(height) :
+    for i in range(1, width) :
+        for j in range(1, height) :
             for k in range(3) :
                 newImg[j][-i][k] = img[i][j][k]
+    
     img = newImg
     return img
 
 def rotateRight(img) :
-    w = len(img)
+    shorterDimension = w = len(img)
     h = len(img[0])
     # same as rotate left, except -j instead of -i
     newImg = []
@@ -198,26 +198,23 @@ def rotateRight(img) :
             for k in range(3) :
                 newImg[i][j].append(0)
     
-    if h > w :
-        for i in range(w) :
-            for k in range(3) :
-                newImg[i][w - 1][k] = img[i][0][k]
-    else :
-        for i in range(h) :
-            for k in range(3) :
-                newImg[i][w - 1][k] = img[i][0][k]
 
-    for i in range(w) :
-            for j in range(h) :
-                for k in range(3) :
-                    newImg[-j][i][k] = img[i][j][k]
+    if w > h: shorterDimension = h
+    for i in range(shorterDimension) :
+        for k in range(3) :
+            newImg[i][w - 1][k] = img[i][0][k]
+
+    for i in range(1, w) :
+        for j in range(1, h) :
+            for k in range(3) :
+                newImg[-j][i][k] = img[i][j][k]
     img = newImg
     return img
 
 def pixelate(img) :
     width = len(img)
     height = len(img[0])
-    # Ignores edge pixels if image dimensions not divisible by 4
+    # Sets the loop max to a point where there is a 4x4 block of pixels to avoid going out of bounds
     width -= width % 4
     height -= height % 4
     
@@ -315,10 +312,10 @@ def binarize(img) :
     else:
         for x in range(w):
             for y in range(h):
-            px = g[x][y]
-            for z in range(3):
-                if (px[z] <= newthreshold):
-                    px[z] = 0
-                else:
-                    px[z] = 255
+                px = g[x][y]
+                for z in range(3):
+                    if (px[z] <= newthreshold):
+                        px[z] = 0
+                    else:
+                        px[z] = 255
     return g

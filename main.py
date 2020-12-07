@@ -1,8 +1,10 @@
 # CMPT 120 Yet Another Image Processer
 # Starter code for main.py
-# Author(s):
-# Date:
-# Description: 
+# Author(s): Connor Goudie, Oliver Lin
+# Date: Dec 7, 2020
+# Description: Driver for a program that can open an image, edit it in some way, and be saved
+# this file generates the UI, loads the image, and allows the user to input instructions to
+# edit an opened image in some way. List of manipulations and their code is in cmpt120imagemanip.py
 
 import cmpt120imageProj
 import cmpt120imageManip
@@ -91,7 +93,13 @@ def handleUserInput(state, img):
                 img - the 2d array of RGB values to be operated on
         Returns: the 2d array of RGB vales of the result image of an operation chosen by the user
     """
+    titleString = ""
+    openFilename = ""
+    # removes the full path name of the file, leaving only the file name
+    openFilenameCondensed = appStateValues["lastOpenFilename"].split("/")[-1]
+    
     userInput = state["lastUserInput"].upper()
+    
     # handle the system functionalities
     if userInput.isalpha(): # check if the input is an alphabet
         print("Log: Doing system functionalities " + userInput)
@@ -100,24 +108,28 @@ def handleUserInput(state, img):
           openFilename = tkinter.filedialog.askopenfilename()
           if openFilename!= "":
               img = cmpt120imageProj.getImage(openFilename)
-              cmpt120imageProj.showInterface(img, openFilename, generateMenu(appStateValues))
               appStateValues["lastOpenFilename"] = openFilename
+              titleString = "Opened "
           else:
               print("Error: no file opened")
+              
         elif userInput == "S":
           tkinter.Tk().withdraw()
           saveFilename = tkinter.filedialog.asksaveasfilename()
           if saveFilename != "":
               cmpt120imageProj.saveImage(img, saveFilename)
               appStateValues["lastSaveFilename"] = saveFilename
+              titleString = "Saved "
           else:
               print("Error: no file saved")
+              
         elif userInput == "R":
           openFilename = appStateValues["lastOpenFilename"]
           if openFilename != "" :
               img = cmpt120imageProj.getImage(openFilename)
-              cmpt120imageProj.showInterface(img, openFilename, generateMenu(appStateValues))
+              titleString = "Reloaded "
           else:
+              titleString = "No Image "
               print("Error: no file to reload")
 
     # or handle the manipulation functionalities based on which mode the application is in
@@ -127,52 +139,78 @@ def handleUserInput(state, img):
         if appStateValues["mode"] == "basic":
           if int(userInput) == 1:
             appStateValues["mode"] = "intermediate"
+            titleString = "Intermediate mode "
           elif int(userInput) == 2:
             appStateValues["mode"] = "advanced"
+            titleString = "Advanced mode "
           elif int(userInput) == 3:
             cmpt120imageManip.invert(img)
+            titleString = "Invert "
           elif int(userInput) == 4:
             cmpt120imageManip.flipHorizontal(img)
+            titleString = "Flip horizontal "
           elif int(userInput) == 5:
             cmpt120imageManip.flipVertical(img)
+            titleString = "Flip vertical "
         # Intermediate mode
         elif appStateValues["mode"] == "intermediate":
           if int(userInput) == 1:
             appStateValues["mode"] = "basic"
+            titleString = "Basic mode "
           elif int(userInput) == 2:
             appStateValues["mode"] = "advanced"
+            titleString = "Advanced mode "
           elif int(userInput) == 3:
             cmpt120imageManip.removeRedChannel(img)
+            titleString = "Invert "
           elif int(userInput) == 4:
             cmpt120imageManip.removeGreenChannel(img)
+            titleString = "Remove green channel "
           elif int(userInput) == 5:
             cmpt120imageManip.removeBlueChannel(img)
+            titleString = "Remove blue channel "
           elif int(userInput) == 6:
             cmpt120imageManip.convertToGreyscale(img)
+            titleString = "Invert "
           elif int(userInput) == 7:
             cmpt120imageManip.applySepiaFilter(img)
+            titleString = "Apply sepia filter "
           elif int(userInput) == 8:
             cmpt120imageManip.decreaseBrightness(img)
+            titleString = "Decrease brightness "
           elif int(userInput) == 9:
             cmpt120imageManip.increaseBrightness(img)
+            titleString = "Increase brightness "
         # Advanced mode
         elif appStateValues["mode"] == "advanced":
           if int(userInput) == 1:
             appStateValues["mode"] = "basic"
+            titleString = "Basic mode "
           elif int(userInput) == 2:
             appStateValues["mode"] = "intermediate"
+            titleString = "Intermediate mode "
           elif int(userInput) == 3:
             img = cmpt120imageManip.rotateLeft(img)
+            titleString = "Rotate left "
           elif int(userInput) == 4:
             img = cmpt120imageManip.rotateRight(img)
+            titleString = "Rotate right "
           elif int(userInput) == 5:
             cmpt120imageManip.pixelate(img)
+            titleString = "Pixelate "
           elif int(userInput) == 6:
             cmpt120imageManip.binarize(img)
-
+            titleString = "Binarize "
     else: # unrecognized user input
         print("Log: Unrecognized user input: " + userInput)
-    cmpt120imageProj.showInterface(img, appStateValues["lastOpenFilename"], generateMenu(appStateValues))
+        
+    # if a file was opened change the title, otherwise use the default (openFilenameCondensed)
+    if openFilename == "" :
+        titleString += openFilenameCondensed
+    else:
+        titleString += openFilename.split("/")[-1]
+        
+    cmpt120imageProj.showInterface(img, titleString, generateMenu(appStateValues))
     return img
 
 # use a dictionary to remember several state values of the application
