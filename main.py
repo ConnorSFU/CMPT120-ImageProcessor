@@ -171,7 +171,7 @@ def handleUserInput(state, img):
             titleString = "Remove blue channel "
           elif int(userInput) == 6:
             cmpt120imageManip.convertToGreyscale(img)
-            titleString = "Invert "
+            titleString = "Grayscale "
           elif int(userInput) == 7:
             cmpt120imageManip.applySepiaFilter(img)
             titleString = "Apply sepia filter "
