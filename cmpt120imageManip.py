@@ -255,67 +255,70 @@ def binarize(img) :
             px += 1
     threshold = total/px
 
-    #create background, only pixels lower than or equal to the threshold will be copied over
-    bg = []
-    for x in range(w):
-        bg.append([])
-        for y in range(h) :
-            bg[x].append([])
-            for k in range(3) :
-                bg[x][y].append(0)
-    for x in range(w) :
-        for y in range(h) :
-            px = img[x][y]
-            for z in range(3):   
-                if(px[z] <= threshold):
-                    bg[x][y][z] = img[x][y][z]
+    stop = False
+    while stop == False:
+        #create background, only pixels lower than or equal to the threshold will be copied over
+        bg = []
+        for x in range(w):
+            bg.append([])
+            for y in range(h) :
+                bg[x].append([])
+                for k in range(3) :
+                    bg[x][y].append(0)
+        for x in range(w) :
+            for y in range(h) :
+                px = img[x][y]
+                for z in range(3):   
+                    if(px[z] <= threshold):
+                        bg[x][y][z] = img[x][y][z]
 
-    #create foreground, only pixels higher than the threshold will be copied over
-    fg = []
-    for x in range(w):
-        fg.append([])
-        for y in range(h) :
-            fg[x].append([])
-            for k in range(3) :
-                fg[x][y].append(0)   
-    for x in range(w) :
-        for y in range(h) :
-            px = img[x][y]
-            for z in range(3):   
-                if(px[z] > threshold):
-                    fg[x][y][z] = img[x][y][z]
+        #create foreground, only pixels higher than the threshold will be copied over
+        fg = []
+        for x in range(w):
+            fg.append([])
+            for y in range(h) :
+                fg[x].append([])
+                for k in range(3) :
+                    fg[x][y].append(0)   
+        for x in range(w) :
+            for y in range(h) :
+                px = img[x][y]
+                for z in range(3):   
+                    if(px[z] > threshold):
+                        fg[x][y][z] = img[x][y][z]
 
-    #calculate average for one of pixel values for background
-    px1 = 0
-    total1 = 0
-    for x in range(w):
-        for y in range(h):
-            total1 += bg[x][y][0]
-            px1 += 1
-    bgavg = total1/px1
-    
-    #calculate average for one of pixel values for foreground
-    px2 = 0
-    total2 = 0
-    for x in range(w):
-        for y in range(h):
-            total2 += fg[x][y][0]
-            px2 += 1
-    fgavg = total2/px2
-
-    #new threshold from average of both averages
-    newthreshold = (bgavg + fgavg)/2
-
-    #if difference between two thresholds is less than or equal to 10, stop the algorithm. otherwise, use the new threshold
-    if abs(threshold - newthreshold) <= 10:
-        threshold = newthreshold
-    else:
+        #calculate average for one of pixel values for background
+        px1 = 0
+        total1 = 0
         for x in range(w):
             for y in range(h):
-                px = g[x][y]
-                for z in range(3):
-                    if (px[z] <= newthreshold):
-                        px[z] = 0
-                    else:
-                        px[z] = 255
+                total1 += bg[x][y][0]
+                px1 += 1
+        bgavg = total1/px1
+        
+        #calculate average for one of pixel values for foreground
+        px2 = 0
+        total2 = 0
+        for x in range(w):
+            for y in range(h):
+                total2 += fg[x][y][0]
+                px2 += 1
+        fgavg = total2/px2
+
+        #new threshold from average of both averages
+        newthreshold = (bgavg + fgavg)/2
+
+        #if difference between two thresholds is less than or equal to 10, stop the algorithm. otherwise, use the new threshold
+        if abs(threshold - newthreshold) <= 10:
+            for x in range(w):
+                for y in range(h):
+                    px = g[x][y]
+                    for z in range(3):
+                        if (px[z] <= newthreshold):
+                            px[z] = 0
+                        else:
+                            px[z] = 255
+            stop = True
+        else:
+            threshold = newthreshold
     return g
